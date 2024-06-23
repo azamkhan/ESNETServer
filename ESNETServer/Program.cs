@@ -1,6 +1,4 @@
-﻿using System.IO.Pipes;
-using System.Collections.Generic;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -91,14 +89,14 @@ class TcpServer
     {
         TcpClient tcpClient = (TcpClient)clientObj;
         NetworkStream clientStream = tcpClient.GetStream();
-        byte[] message = new byte[4096];
+        byte[] message = new byte[1024];
         int bytesRead;
 
         while (_isRunning)
         {
             try
             {
-                bytesRead = clientStream.Read(message, 0, 4096);
+                bytesRead = clientStream.Read(message, 0, 1024);
                 if (bytesRead == 0)
                 {
                     // Client disconnected
@@ -107,6 +105,7 @@ class TcpServer
 
                 string receivedMessage = Encoding.ASCII.GetString(message, 0, bytesRead);
                 Console.WriteLine($"Received: {receivedMessage}");
+                Console.WriteLine($"Received: {message}");
 
                 string[] parts = receivedMessage.Split(';');
                 if (parts.Length == 2 && parts[0] == "INF")
